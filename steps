@@ -1,0 +1,13 @@
+Design blocks and transactions data structures
+implement methods for adding blocks and transactions
+
+add fake accounts 
+implement methods for signing, and verifying transactions (UTXO)
+
+implement consensus and pow
+
+create networking gossip protocol for communication
+
+implement wallets
+
+implement block and transaction validation
