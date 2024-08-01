@@ -4,3 +4,4 @@ minimum amount is 1 nano. 1_000_000_000 nano = 1 novacoin
 using hexadecimal for key store instead of wif for simplicity
 address generation is last 16 bytes of the hex string of sha256(pub_key)
 
+using digit separators :)

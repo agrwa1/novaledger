@@ -12,7 +12,9 @@ struct block {
     std::string timestamp;
     std::string previous_hash;
     long long int nonce;
-    std::vector<struct transaction> txs;
+    std::vector<transaction> txs;
+    // std::string merkle_root;
+    std::string hash;
 };
 
 #endif

@@ -4,6 +4,11 @@
 #include <openssl/ec.h>
 
 #include <string>
+#include <vector>
+
+std::vector<uint8_t> transaction_signature(std::vector<uint8_t> hash, std::string priv_key);
+
+std::vector<uint8_t> hash_sha256(std::vector<uint8_t>);
 
 EC_KEY* generate_keys();
 std::string get_priv_key(EC_KEY* ec_key);
