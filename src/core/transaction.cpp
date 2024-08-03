@@ -5,19 +5,30 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <vector>
 
 #include "crypto/all.h"
 #include "util/all.h"
 
-// transaction init_transaction(std::string sender, std::string receiver, int64_t amount, int64_t transaction_fee) {
-//     transaction t;
-//     t.sender_address = sender;
-//     t.receiver_address = receiver;
-//     t.amount = amount;
-//     t.transaction_fee = transaction_fee;
+tx init_tx(std::string s_addr, std::string r_addr, uint8_t num_input, uint8_t num_output, std::vector<tx_in> inputs, std::vector<tx_out> outputs) {
+    tx t{
+        s_addr,
+        r_addr,
+        num_input,
+        num_output,
+        inputs,
+        outputs};
 
-//     return t;
-// }
+    return t;
+}
+
+std::string hash_tx(tx t) {
+    // NOTE: PURPOSEFULLY NOT SERIALZING S_ADDR OR R_ADDR BC PLAN ON LATER REMOVING FIELDS
+    // serialize transaction -> double hash results
+    std::vector<uint8_t> serialized_tx = serialize(t);
+    std::string hashed_tx = bytes_to_hex(hash_sha256(hash_sha256(serialized_tx)));
+    return hashed_tx;
+}
 
 // void sign_transaction(transaction* t, std::string priv_key, std::string pub_key) {
 //     // serialize, hash, add script sig and script pub key

@@ -4,29 +4,21 @@
 #include "wallet/all.h"
 
 void print_tx(tx t) {
-    std::cout << "\"" << t.s_addr << "\" -> \"" << t.r_addr << "\"/\n"
-              << std::endl;
+    std::cout << "From: \"" << t.s_addr << "\"" << std::endl;
+    std::cout << "To: \"" << t.r_addr << "\"" << std::endl;
+
+    std::cout << "Inputs: " << t.inputs.size() << std::endl;
     for (auto in : t.inputs) {
         std::cout << "\"" << in.tx_hash << "\"[" << in.output_idx << "]: " << in.sig << std::endl;
     }
-    for (auto out : t.outputs) {
-        std::cout << "Amount: " << out.amt << ". PubKey Hash: " << out.pub_hash << std::endl;
+
+    std::cout << "Outputs: " << t.outputs.size() << std::endl;
+    for (int i = 0; i < t.outputs.size(); i++) {
+        tx_out out = t.outputs[i];
+        std::cout << "[" << i << "] Amount: " << out.amt << ". PubKey Hash: " << out.pub_hash << std::endl;
     }
     std::cout << std::endl;
 }
-
-// void print_transaction(transaction* t) {
-//     std::cout << "Sender: " << t->sender_address << std::endl;
-//     std::cout << "Receiver: " << t->receiver_address << std::endl;
-//     std::cout << "Amount: " << t->amount << std::endl;
-//     std::cout << "Transaction Fee: " << t->transaction_fee << std::endl;
-//     std::cout << "Signature: " << t->script_sig << std::endl;
-//     std::cout << "PubKey Verification: " << t->script_pub_key << std::endl;
-
-//     std::cout << std::endl;
-
-//     return;
-// }
 
 void print_wallet(wallet w) {
     std::cout << "Private Key: " << w.priv_key << std::endl

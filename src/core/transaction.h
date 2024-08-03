@@ -33,12 +33,17 @@ typedef struct tx {
     // keeping for wallets to scan through transactions
     std::string s_addr;
     std::string r_addr;
-    const std::string version = "1.0";
     uint8_t num_input;
     uint8_t num_output;
     std::vector<tx_in> inputs;
     std::vector<tx_out> outputs;
+
+    const std::string version = "1.0";
 } tx;
+
+// tx gen_gns_tx(std::string r_addr, std::string r_pub_key, uint64_t amt);
+tx init_tx(std::string s_addr, std::string r_addr, uint8_t num_input, uint8_t num_output, std::vector<tx_in> inputs, std::vector<tx_out> outputs);
+std::string hash_tx(tx t);
 
 // need to be able to add transactions
 // right now can't lookup utxos by address

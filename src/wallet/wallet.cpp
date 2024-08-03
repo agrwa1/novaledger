@@ -9,6 +9,31 @@
 #include "crypto/all.h"
 #include "util/all.h"
 
+// s_addr is coinbase/magicmoneycenter
+// inputs from MMC
+// TODO: add security checks, ie: num_inputs = inputs.size()?
+tx gen_gns_tx(wallet& w, std::string r_addr, std::string r_pub_key, uint64_t amt) {
+    std::string s_addr = "magicmoneycenter";
+    std::vector<tx_in> inputs{};
+
+    // create public hash for receiver by double hashing
+    std::vector<uint8_t> pub_key_bytes(r_pub_key.begin(), r_pub_key.end());
+    std::string pub_hash = bytes_to_hex(hash_sha256(hash_sha256(pub_key_bytes)));
+    tx_out output{amt, pub_hash};
+    std::vector<tx_out> outputs{output};
+
+    tx gns_tx = init_tx(s_addr, r_addr, 0, 1, inputs, outputs);
+
+    // NOTE - Hardcoded holder fn until created syncing
+    // TODO - move to wallet_sync when created
+    //  add token to pool.
+    std::string tx_hash = hash_tx(gns_tx);
+    uint32_t output_idx = 0;
+    add_utxo_to_w_pool(w, tx_hash, output_idx, amt);
+
+    return gns_tx;
+}
+
 // add error codes eventually 😭
 tx create_tx(wallet& w, const std::string& r_addr, std::string r_pub, const uint64_t& amt) {
     tx result;
@@ -67,8 +92,6 @@ tx create_tx(wallet& w, const std::string& r_addr, std::string r_pub, const uint
 
 // FIXME -  can easily add faulty utxos to pool
 void add_utxo_to_w_pool(wallet& w, const std::string& tx_hash, const uint32_t& output_idx, const uint64_t& amt) {
-    w_utxo utxo;
-
     // add signature + pubk = sig
     // signature = priv key signed on tx_hash
     // + pub key
@@ -77,12 +100,12 @@ void add_utxo_to_w_pool(wallet& w, const std::string& tx_hash, const uint32_t& o
     std::vector<uint8_t> hash_sig_bytes = sign_tx(tx_hash_bytes, w.priv_key);
     std::string sig = bytes_to_hex(hash_sig_bytes) + " " + w.pub_key;
 
-    utxo.tx_hash = tx_hash;
-    utxo.output_idx = output_idx;
-    utxo.amt = amt;
-    utxo.sig = sig;
+    w_utxo utxo{tx_hash, output_idx, amt, sig};
 
+    // most recent utxos first, so add to back
     w.pool.push_back(utxo);
+
+    // std::cout << get_balance(w.pool) << std::endl;
 
     return;
 }
