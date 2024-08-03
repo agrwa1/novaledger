@@ -35,6 +35,7 @@ tx gen_gns_tx(wallet& w, std::string r_addr, std::string r_pub_key, uint64_t amt
 }
 
 // add error codes eventually 😭
+// TODO: syncing with nodes -> remove manual wallet pool additions
 tx create_tx(wallet& w, const std::string& r_addr, std::string r_pub, const uint64_t& amt) {
     tx result;
 
@@ -85,9 +86,13 @@ tx create_tx(wallet& w, const std::string& r_addr, std::string r_pub, const uint
     result.inputs = inputs;
     result.outputs = outputs;
 
-    return result;
+    // add to wallet pool
+    // NOTE for now this is just the return val token
+    std::string tx_hash = hash_tx(result);
+    add_utxo_to_w_pool(w, tx_hash, 1, sum - amt);
 
     // TODO: send to node for addition to block
+    return result;
 }
 
 // FIXME -  can easily add faulty utxos to pool

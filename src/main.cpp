@@ -31,9 +31,9 @@ int main() {
         // std::cout << "Wallet balance: " << get_balance(w.pool) << std::endl;
         // print_tx(gns_tx);
 
-        if (i == 0) {
-            print_wallet(w);
-        }
+        // if (i == 0) {
+        //     print_wallet(w);
+        // }
 
         // print_wallet(w);
         wallets.push_back(w);
@@ -42,23 +42,15 @@ int main() {
         // gns tx only has one
     }
 
-    print_wallet(wallets[0]);
-
     // check initial balance
-    std::cout << "Balance: " << get_balance(wallets[0].pool) << std::endl;
-
-    // add utxo to wallet[0] pool. only valid for genesis
-    // generating genesis transactions -> first wallets
-
-    // std::vector<w_utxo> gns_utxos {
-    //     w_utxo {
-    //         "",
-    //     }
-
-    // };
+    std::cout << "Wallet 1 Balance: " << get_balance(wallets[0].pool) << std::endl;
+    std::cout << "Wallet 2 Balance: " << get_balance(wallets[1].pool) << std::endl;
 
     // tx from w1 to
-    // tx t1 = create_tx(wallets[0], wallets[1].addr, wallets[1].pub_key, 1'000'000);
+    tx t1 = create_tx(wallets[0], wallets[1].addr, wallets[1].pub_key, 1'000'000);
+
+    std::cout << "Wallet 1 Balance: " << get_balance(wallets[0].pool) << std::endl;
+    std::cout << "Wallet 2 Balance: " << get_balance(wallets[1].pool) << std::endl;
 
     // print_tx(t1);
     // std::cout << "main " << std::endl;

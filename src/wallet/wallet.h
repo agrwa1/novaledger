@@ -7,6 +7,7 @@
 #include "core/all.h"
 
 // stores relevant utxo data
+// for wallet storage records, doesn't actually count for anything
 typedef struct w_utxo {
     std::string tx_hash;
     uint32_t output_idx;
