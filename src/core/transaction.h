@@ -9,8 +9,7 @@
 
 #include "crypto/all.h"
 
-// input, output, signature, metadata
-// sender, receiver, amount, signature, transaction_fee
+const std::string TRANSACTION_VERSION = "1.0";
 
 typedef struct tx_in {
     std::string tx_hash;
@@ -38,7 +37,7 @@ typedef struct tx {
     std::vector<tx_in> inputs;
     std::vector<tx_out> outputs;
 
-    const std::string version = "1.0";
+    std::string version = TRANSACTION_VERSION;
 } tx;
 
 // tx gen_gns_tx(std::string r_addr, std::string r_pub_key, uint64_t amt);

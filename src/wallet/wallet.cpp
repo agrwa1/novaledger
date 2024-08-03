@@ -12,13 +12,14 @@
 // s_addr is coinbase/magicmoneycenter
 // inputs from MMC
 // TODO: add security checks, ie: num_inputs = inputs.size()?
+
 tx gen_gns_tx(wallet& w, std::string r_addr, std::string r_pub_key, uint64_t amt) {
     std::string s_addr = "magicmoneycenter";
     std::vector<tx_in> inputs{};
 
     // create public hash for receiver by double hashing
-    std::vector<uint8_t> pub_key_bytes(r_pub_key.begin(), r_pub_key.end());
-    std::string pub_hash = bytes_to_hex(hash_sha256(hash_sha256(pub_key_bytes)));
+
+    std::string pub_hash = hash_sha256(hash_sha256(r_pub_key));
     tx_out output{amt, pub_hash};
     std::vector<tx_out> outputs{output};
 
@@ -69,13 +70,11 @@ tx create_tx(wallet& w, const std::string& r_addr, std::string r_pub, const uint
 
     // create necessary outputs
     // calculate pub_hash for receiver (double hashed r pub)
-    std::vector<uint8_t> r_pub_key_bytes(r_pub.begin(), r_pub.end());
-    std::string r_pub_hash = bytes_to_hex(hash_sha256(hash_sha256(r_pub_key_bytes)));
+    std::string r_pub_hash = hash_sha256(hash_sha256(r_pub));
     tx_out main_out = tx_out{amt, r_pub_hash};
 
     // create output for return utxo to sender
-    std::vector<uint8_t> w_p_addr_bytes(w.pub_key.begin(), w.pub_key.end());
-    std::string w_pub_hash = bytes_to_hex(hash_sha256(hash_sha256(w_p_addr_bytes)));
+    std::string w_pub_hash = hash_sha256(hash_sha256(w.pub_key));
     tx_out ret_out = tx_out{sum - amt, w_pub_hash};
 
     std::vector<tx_out> outputs{main_out, ret_out};
@@ -115,7 +114,8 @@ void add_utxo_to_w_pool(wallet& w, const std::string& tx_hash, const uint32_t& o
     return;
 }
 
-wallet init_wallet() {
+wallet
+init_wallet() {
     crypto_keys keys = gen_keys();
     std::string wallet_address = gen_wallet_addr(keys.pub_key);
 
@@ -126,7 +126,8 @@ wallet init_wallet() {
     HELPER FUNCTIONS
 */
 
-uint64_t get_balance(std::list<w_utxo> pool) {
+uint64_t
+get_balance(std::list<w_utxo> pool) {
     uint64_t sum = 0;
     if (pool.empty()) {
         return sum;

@@ -43,6 +43,13 @@ std::vector<uint8_t> hash_sha256(std::vector<uint8_t> raw) {
     return hash;
 }
 
+std::string hash_sha256(std::string raw) {
+    std::vector<uint8_t> raw_bytes(raw.begin(), raw.end());
+    std::vector<uint8_t> bytes = hash_sha256(raw_bytes);
+
+    return bytes_to_hex(bytes);
+}
+
 std::string sha256_to_hex(const std::vector<unsigned char>& pubKey) {
     // SHA-256 hash
     unsigned char hash[SHA256_DIGEST_LENGTH];

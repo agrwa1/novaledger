@@ -5,62 +5,44 @@
 #include "util/all.h"
 #include "wallet/all.h"
 
-typedef std::vector<block> blockchain;
-
+// implement soft nodes
 // hard nodes
-typedef struct {
+typedef struct node {
     blockchain chain;
     utxo_set pool;
     std::string miner_addr;
 } node;
 
-// implement soft nodes
-
-int main() {
+std::vector<wallet> gen_gns_wallets(int num_wallets) {
     std::vector<wallet> wallets;
-    std::vector<tx> gns_txs;
-    utxo_set pool;
-
-    // create wallets
-    for (int i = 0; i < 5; i++) {
-        // initialize genesis wallet addrs
+    for (int i = 0; i < num_wallets; i++) {
         wallet w = init_wallet();
-
-        // create genesis transactions for each
-        tx gns_tx = gen_gns_tx(w, w.addr, w.pub_key, 5'000'000);
-        // std::cout << "Wallet balance: " << get_balance(w.pool) << std::endl;
-        // print_tx(gns_tx);
-
-        // if (i == 0) {
-        //     print_wallet(w);
-        // }
-
-        // print_wallet(w);
         wallets.push_back(w);
-
-        // add tokens to wallet pool
-        // gns tx only has one
     }
 
-    // check initial balance
-    std::cout << "Wallet 1 Balance: " << get_balance(wallets[0].pool) << std::endl;
-    std::cout << "Wallet 2 Balance: " << get_balance(wallets[1].pool) << std::endl;
+    return wallets;
+}
 
-    // tx from w1 to
-    tx t1 = create_tx(wallets[0], wallets[1].addr, wallets[1].pub_key, 1'000'000);
+// create genesis txs
+std::vector<tx> gen_gns_txs(std::vector<wallet> wallets, uint64_t amt) {
+    std::vector<tx> txs;
+    for (auto w : wallets) {
+        tx t = gen_gns_tx(w, w.addr, w.pub_key, amt);
+        txs.push_back(t);
+    }
 
-    std::cout << "Wallet 1 Balance: " << get_balance(wallets[0].pool) << std::endl;
-    std::cout << "Wallet 2 Balance: " << get_balance(wallets[1].pool) << std::endl;
+    return txs;
+}
 
-    // print_tx(t1);
-    // std::cout << "main " << std::endl;
-    // print_wallet(wallets[0]);
-    // print_wallet(wallets[1]);
+int main() {
+    std::vector<wallet> wallets = gen_gns_wallets(3);
+    std::vector<tx> txs = gen_gns_txs(wallets, 10'000'000);
 
-    // NOTE: other users public keys aren't publicly available
+    for (auto t : txs) {
+        print_tx(t);
+    }
 
-    // initial wallets now has 5 wallets to address from
-    // issuing 50 bitcoin to start; 10 for each wallet
+    block b = mine_block(0, "", txs);
 
     return 0;
 }
