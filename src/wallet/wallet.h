@@ -40,28 +40,30 @@ struct wallet {
         : pub_key(pub), priv_key(priv), addr(addr) {}
 };
 
-wallet init_wallet();
-
-uint64_t get_balance(std::list<w_utxo> pool);
-
-// hardcoded for now, implement with networks
-// after hard syncing with full node,
-// verify all utxo in pool are valid in node pool
-void hard_sync_wallet(wallet&);  // refresh
-
-// add to pool
-
 // FIXME: update create tx to use atomic updates
-// remove from pool
-
 // create transactions: wallet, r addr, amt
 tx create_tx(wallet& w, const std::string& r_addr, std::string r_pub, const uint64_t& amt);
+
+void add_utxo_to_w_pool(wallet& w, const std::string& tx_hash, const uint32_t& output_idx, const uint64_t& amt);
 
 /*
     HELPER FUNCTIONS
 */
 
-// calculate current amt of coin
-uint64_t get_balance(std::vector<w_utxo>&);
+uint64_t get_balance(std::list<w_utxo> pool);
+
+wallet init_wallet();
+
+/*
+    TODO
+*/
+
+// hardcoded for now, implement with networks
+// after hard syncing with full node,
+// verify all utxo in pool are valid in node pool
+// void hard_sync_wallet(wallet&);  // refresh
+// void soft_sync wallet
+
+// remove from pool
 
 #endif

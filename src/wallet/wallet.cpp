@@ -88,8 +88,8 @@ void add_utxo_to_w_pool(wallet& w, const std::string& tx_hash, const uint32_t& o
 }
 
 wallet init_wallet() {
-    crypto_keys keys = keygen();
-    std::string wallet_address = generate_wallet_address(keys.pub_key);
+    crypto_keys keys = gen_keys();
+    std::string wallet_address = gen_wallet_addr(keys.pub_key);
 
     return wallet(keys.pub_key, keys.priv_key, wallet_address);
 }

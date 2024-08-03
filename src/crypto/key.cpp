@@ -1,23 +1,28 @@
 #include <openssl/evp.h>
 
-#include "crypto.h"
+#include "crypto/all.h"
 #include "util/all.h"
 
-crypto_keys keygen() {
+// crypto_keys keygen() {
+//     crypto_keys keys;
+//     EC_KEY* ec_key = generate_keys();
+//     keys.priv_key = get_priv_key(ec_key);
+//     keys.pub_key = get_pub_key(ec_key);
+
+//     return keys;
+// }
+
+// uses secp256k1
+// no error handling :)
+crypto_keys gen_keys() {
     crypto_keys keys;
-    EC_KEY* ec_key = generate_keys();
+    EC_KEY* ec_key = EC_KEY_new_by_curve_name(NID_secp256k1);
+    EC_KEY_generate_key(ec_key);
+
     keys.priv_key = get_priv_key(ec_key);
     keys.pub_key = get_pub_key(ec_key);
 
     return keys;
-}
-
-// uses secp256k1
-// no error handling :)
-EC_KEY* gen_keys() {
-    EC_KEY* ec_key = EC_KEY_new_by_curve_name(NID_secp256k1);
-    EC_KEY_generate_key(ec_key);
-    return ec_key;
 }
 
 std::string get_priv_key(EC_KEY* ec_key) {

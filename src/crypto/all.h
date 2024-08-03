@@ -3,5 +3,7 @@
 
 #include "crypto.h"
 #include "key.h"
+#include "transaction.h"
+#include "wallet.h"
 
 #endif

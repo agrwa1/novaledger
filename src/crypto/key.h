@@ -12,12 +12,8 @@ struct crypto_keys {
     std::string pub_key;
 };
 
-crypto_keys keygen();
-
-EC_KEY* generate_keys();
-
+crypto_keys gen_keys();
 std::string get_priv_key(EC_KEY* ec_key);
-
 std::string get_pub_key(EC_KEY* ec_key);
 
 #endif

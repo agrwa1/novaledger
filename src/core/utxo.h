@@ -32,6 +32,7 @@ typedef struct utxo_val {
 
 typedef std::unordered_map<utxo_key, utxo_val, utxo_hash_fn> utxo_set;
 
+// REVIEW: does this work??
 void add_utxo_to_n_pool(utxo_set& pool, std::string hash, uint32_t idx, uint64_t amt, std::string pub_hash);
 
 void del_utxo_from_n_pool(utxo_set& pool, std::string hash, uint32_t idx);
