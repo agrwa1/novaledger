@@ -9,49 +9,21 @@
 
 #include "core/all.h"
 #include "crypto/all.h"
+#include "util/all.h"
 
-// make new block
-// used by blockchain
-// TODO: add merkle tree
-// TODO: Proof of work -> add nonce config
-// mine new block
-block mine_block(uint64_t height, std::string prev_hash, std::vector<tx> txs) {
-    block b;
-
-    // create initial block
-    b.height = height;
-    b.prev_hash = prev_hash;
-    b.txs = txs;
-    b.timestamp = std::time(nullptr);
-
-    // security: merkle trees prove that they actually did include a transaction
-    // security: provides verification that no data was corrupted or lost
-    // efficiency: easier to just send the merkle hash
-    // efficiency: soft nodes rely on full nodes to provide verifications
-    // privacy: don't have to send all transactions over network
-
-    // create merkle tree
-    std::string hash = construct_merkle_tree(txs);
-    std::vector<std::string> proof = generate_merkle_proof(txs, hash_tx(txs[2]));
-    std::string cur_hash = hash_tx(txs[2]);
-    if (merkle_proof_is_valid(proof, hash_tx(txs[2]), 2))
-        std::cout << "Proof is valid.";
-
-    // add merkle root hash
-
-    // get_merkle_root(txs);
-
-    // TODO: blockchain needs to update utxo set
-    // mine block w nonce
-
-    return b;
+std::string hash_block(block b) {
+    std::vector<uint8_t> serialized_block = serialize(b);
+    std::string blk_hash = bytes_to_hex(hash_sha256(hash_sha256(serialized_block)));
+    return blk_hash;
 }
 
-std::string construct_merkle_tree(std::vector<tx>& txs) {
-    // create leaf layer
-    // create parent layer:
-    //      while parent layer num > 1, go again
+// security: merkle trees prove that they actually did include a transaction
+// security: provides verification that no data was corrupted or lost
+// efficiency: easier to just send the merkle hash
+// efficiency: soft nodes rely on full nodes to provide verifications
+// privacy: don't have to send all transactions over network
 
+std::string construct_merkle_tree(std::vector<tx>& txs) {
     std::vector<std::string> leaf_nodes;
     for (auto t : txs) {
         leaf_nodes.push_back(hash_tx(t));

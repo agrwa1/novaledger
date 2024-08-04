@@ -7,9 +7,8 @@
 #include <sstream>
 #include <string>
 
+#include "constants.h"
 #include "crypto/all.h"
-
-const std::string TRANSACTION_VERSION = "1.0";
 
 typedef struct tx_in {
     std::string tx_hash;

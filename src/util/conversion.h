@@ -19,4 +19,6 @@ std::vector<uint8_t> uint64_to_bytes(uint64_t value);
 
 std::vector<uint8_t> serialize(const tx& tx);
 
+std::vector<uint8_t> serialize(block& b);
+
 #endif

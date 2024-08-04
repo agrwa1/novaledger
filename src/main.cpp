@@ -7,11 +7,11 @@
 
 // implement soft nodes
 // hard nodes
-typedef struct node {
-    blockchain chain;
-    utxo_set pool;
-    std::string miner_addr;
-} node;
+// typedef struct node {
+//     blockchain chain;
+//     utxo_set pool;
+//     std::string miner_addr;
+// } node;
 
 std::vector<wallet> gen_gns_wallets(int num_wallets) {
     std::vector<wallet> wallets;
@@ -35,14 +35,17 @@ std::vector<tx> gen_gns_txs(std::vector<wallet> wallets, uint64_t amt) {
 }
 
 int main() {
-    std::vector<wallet> wallets = gen_gns_wallets(5);
+    std::vector<wallet> wallets = gen_gns_wallets(2048);
     std::vector<tx> txs = gen_gns_txs(wallets, 10'000'000);
 
-    for (auto t : txs) {
-        print_tx(t);
-    }
+    // for (auto t : txs) {
+    //     print_tx(t);
+    // }
 
-    block b = mine_block(0, "", txs);
+    blockchain chain = blockchain_gns(txs);
+    chain.tx_pool = txs;
+    mine_new_block(chain);
+    print_blockchain(chain);
 
     return 0;
 }
