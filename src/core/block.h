@@ -27,7 +27,16 @@ struct block {
     uint32_t difficulty = DEFAULT_BLOCK_HASH_DIFFICULTY;
 };
 
+struct merkle_proof_node {
+    std::string hash;
+    bool after;
+};
+
 block mine_block(uint64_t height, std::string prev_hash, std::vector<tx> txs);
 
-std::string get_merkle_root(std::vector<tx>& txs);
+std::string construct_merkle_tree(std::vector<tx>& txs);
+
+std::vector<std::string> generate_merkle_proof(std::vector<tx> txs, std::string target_tx_hash);
+
+bool merkle_proof_is_valid(std::vector<std::string> proof, std::string target_hash, uint32_t index);
 #endif

@@ -35,7 +35,7 @@ std::vector<tx> gen_gns_txs(std::vector<wallet> wallets, uint64_t amt) {
 }
 
 int main() {
-    std::vector<wallet> wallets = gen_gns_wallets(3);
+    std::vector<wallet> wallets = gen_gns_wallets(5);
     std::vector<tx> txs = gen_gns_txs(wallets, 10'000'000);
 
     for (auto t : txs) {

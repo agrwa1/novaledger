@@ -31,9 +31,15 @@ block mine_block(uint64_t height, std::string prev_hash, std::vector<tx> txs) {
     // privacy: don't have to send all transactions over network
 
     // create merkle tree
+    std::string hash = construct_merkle_tree(txs);
+    std::vector<std::string> proof = generate_merkle_proof(txs, hash_tx(txs[2]));
+    std::string cur_hash = hash_tx(txs[2]);
+    if (merkle_proof_is_valid(proof, hash_tx(txs[2]), 2))
+        std::cout << "Proof is valid.";
+
     // add merkle root hash
 
-    get_merkle_root(txs);
+    // get_merkle_root(txs);
 
     // TODO: blockchain needs to update utxo set
     // mine block w nonce
@@ -41,100 +47,94 @@ block mine_block(uint64_t height, std::string prev_hash, std::vector<tx> txs) {
     return b;
 }
 
-// need to memoize
-std::string get_merkle_root(std::vector<tx>& txs) {
-    uint32_t num_txs = static_cast<uint32_t>(txs.size());
-    uint32_t num_leaf_nodes = num_txs + (num_txs % 2);
+std::string construct_merkle_tree(std::vector<tx>& txs) {
+    // create leaf layer
+    // create parent layer:
+    //      while parent layer num > 1, go again
 
-    // get total node count
-    uint32_t total_node_count = num_leaf_nodes;
-    uint32_t layer_nodes = num_leaf_nodes / 2;
-    while (layer_nodes > 1) {
-        total_node_count += layer_nodes;
-        layer_nodes = (layer_nodes + (layer_nodes % 2)) / 2;
+    std::vector<std::string> leaf_nodes;
+    for (auto t : txs) {
+        leaf_nodes.push_back(hash_tx(t));
     }
 
-    total_node_count++;
+    while (leaf_nodes.size() > 1) {
+        std::vector<std::string> parent_nodes;
 
-    std::cout << total_node_count << std::endl;
-
-    std::unordered_map<uint32_t, std::string> map;
-
-    uint32_t num_layer_nodes = num_leaf_nodes;
-    int cur_layer_extra_node = num_txs % 2;
-    uint32_t cur_node_index = 1;
-
-    while (cur_node_index < total_node_count) {
-        // layer logic
-
-        // if <= num_layer_nodes, get hash
-        if (cur_node_index <= num_layer_nodes) {
-            std::string hash;
-            if (cur_node_index < num_leaf_nodes) {
-                // hash tx
-                uint32_t l_ind = std::min(cur_node_index, num_txs);
-                hash = hash_tx(txs[l_ind]);
+        for (uint32_t i = 0; i < leaf_nodes.size(); i += 2) {
+            if (i + 1 < leaf_nodes.size()) {
+                // next node exists
+                parent_nodes.push_back(hash_sha256(leaf_nodes[i] + leaf_nodes[i + 1]));
             } else {
-                // need to hash below or across
-                // if (cur_node_index == )
+                parent_nodes.push_back(hash_sha256(leaf_nodes[i] + leaf_nodes[i]));
             }
-
-            // add to map
         }
 
-        // else move up layer
-
-        cur_node_index++;
+        leaf_nodes = parent_nodes;
     }
 
-    return "";
-
-    // uint32_t cur_num_nodes = num_leaf_nodes;
-    // std::string max_hash;
-
-    // while (cur_num_nodes < total_node_count) {
-
-    // }
+    return leaf_nodes[0];
 }
 
-// fuck me
-// uint32_t merkle_min_hash(uint32_t index, size_t size) {
-//     return std::min(index, static_cast<uint32_t>(size));
-// }
+std::vector<std::string> generate_merkle_proof(std::vector<tx> txs, std::string target_tx_hash) {
+    int32_t target_idx = -1;
+    std::vector<std::string> leaf_nodes;
 
-// std::string merkle_root_hash_recurse(uint32_t index, std::vector<tx>& txs) {
-//     // check if at leaf layer
-//     // no: go down -> hash left and right together, yes: start hash node
+    for (int i = 0; i < txs.size(); i++) {
+        if (hash_tx(txs[i]) == target_tx_hash) {
+            target_idx = i;
+        }
+        leaf_nodes.push_back(hash_tx(txs[i]));
+    }
 
-//     // check if leaf or internal
-//     // leaf if parent level < tx.size() && left child level > tx.size();
+    if (target_idx == -1)
+        return {};
 
-//     // if leaf layer
+    // go thrpugh each layer and append to sibling nodes
+    std::vector<std::string> siblings;
 
-//     uint32_t two_multiple = 1;
-//     while (two_multiple <= index) {
-//         two_multiple *= 2;
-//     }
+    while (leaf_nodes.size() > 1) {
+        std::vector<std::string> parents;
+        for (int i = 0; i < leaf_nodes.size(); i += 2) {
+            if (i + 1 < leaf_nodes.size()) {
+                parents.push_back(hash_sha256(leaf_nodes[i] + leaf_nodes[i + 1]));
+            } else {
+                parents.push_back(hash_sha256(leaf_nodes[i] + leaf_nodes[i]));
+            }
+        }
 
-//     uint32_t num_txs = static_cast<uint32_t>(txs.size());
+        // sibling calc
+        int sibling_idx = (target_idx % 2 == 0) ? target_idx + 1 : target_idx - 1;
 
-//     // if current line holds
-//     if ((two_multiple / 2) >= txs.size()) {
-//         // hash transaction
-//         // need to get index of closest lowest multiple of 2
-//         uint32_t ret_ind = std::min(index, num_txs) - 1;
-//         std::string hash = hash_tx(txs[ret_ind]);
-//         std::cout << index << ": " << hash << std::endl;
-//         return hash;
-//     }
+        if (sibling_idx < leaf_nodes.size()) {
+            siblings.push_back(leaf_nodes[sibling_idx]);
 
-//     // std::string left_hash = merkle_root_hash_recurse(merkle_min_hash(index * 2, txs.size()), txs);
-//     // std::string right_hash = merkle_root_hash_recurse(merkle_min_hash(index * 2 + 1, txs.size()), txs);
-//     std::string left_hash = merkle_root_hash_recurse(index * 2, txs);
-//     std::string right_hash = merkle_root_hash_recurse(index * 2 + 1, txs);
+        } else
+            siblings.push_back(leaf_nodes[target_idx]);
 
-//     std::string hash = hash_sha256(left_hash + right_hash);
+        target_idx /= 2;
+        leaf_nodes = parents;
+    }
 
-//     std::cout << index << ": " << index * 2 << " + " << index * 2 + 1 << " -> " << hash << std::endl;
-//     return hash;
-// }
+    siblings.push_back(leaf_nodes[0]);
+
+    return siblings;
+}
+
+bool merkle_proof_is_valid(std::vector<std::string> proof, std::string target_hash, uint32_t index) {
+    // while target_kk
+    for (auto p : proof) {
+        if (target_hash == p)
+            return true;
+
+        if (index % 2 == 0) {
+            // combine right
+            target_hash = hash_sha256(target_hash + p);
+        } else {
+            target_hash = hash_sha256(p + target_hash);
+        }
+
+        index /= 2;
+    }
+
+    return false;
+}
