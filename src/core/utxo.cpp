@@ -1,53 +1,11 @@
+#include "utxo.h"
+
 #include <iostream>
 #include <string>
 
 #include "crypto/all.h"
 #include "types/all.h"
 #include "util/all.h"
-
-bool utxo_exists_in_pool(utxo_set& pool, utxo_key& key) {
-    return (pool.find(key) != pool.end());
-}
-
-bool utxo_is_valid(utxo_set& pool, utxo_key& key, tx_in in) {
-    if (!utxo_exists_in_pool(pool, key)) return false;
-    // sig = "signature" "public key"
-    // pub_hash = hash(hash(public key))
-
-    // splitting sig into parts
-    // std::string signature, pub_key;
-    // make this not shit itself
-    size_t space_idx = key.prev_tx_hash.find(' ');
-    if (space_idx == std::string::npos) {
-        return false;
-    }
-    std::string signature = key.prev_tx_hash.substr(0, space_idx);
-    std::string pub_key = key.prev_tx_hash.substr(space_idx);
-
-    std::cout << "Signature: \"" << signature << "\"" << std::endl;
-    std::cout << "Public Key: \"" << pub_key << "\"" << std::endl;
-
-    return true;
-}
-
-void remove_utxo(utxo_set& pool, utxo_key key) {
-    if (utxo_exists_in_pool(pool, key)) {
-        std::cout << "Removing UTXO: \n\t";
-        print_utxo_key(key);
-        pool.erase(key);
-    }
-}
-
-void add_utxo(utxo_set& pool, utxo_key key, utxo_val val) {
-    std::cout << "Adding UTXO to pool: \n\t\"" << key.prev_tx_hash << "\" ["
-              << key.output_idx << "] => " << val.amt << std::endl
-              << "\tPubKey Hash: " << val.tx_pub_hash << std::endl;
-    pool[key] = val;
-}
-
-utxo_key utxo_key_from_input(tx_in in) {
-    return utxo_key{in.tx_hash, in.output_idx};
-}
 
 bool update_utxo_set_from_block(utxo_set& pool, block& blk) {
     /*
@@ -110,4 +68,48 @@ bool update_utxo_set_from_block(utxo_set& pool, block& blk) {
     }
 
     return true;
+}
+
+bool utxo_exists_in_pool(utxo_set& pool, utxo_key& key) {
+    return (pool.find(key) != pool.end());
+}
+
+bool utxo_is_valid(utxo_set& pool, utxo_key& key, tx_in in) {
+    if (!utxo_exists_in_pool(pool, key)) return false;
+    // sig = "signature" "public key"
+    // pub_hash = hash(hash(public key))
+
+    // splitting sig into parts
+    // std::string signature, pub_key;
+    // make this not shit itself
+    size_t space_idx = key.prev_tx_hash.find(' ');
+    if (space_idx == std::string::npos) {
+        return false;
+    }
+    std::string signature = key.prev_tx_hash.substr(0, space_idx);
+    std::string pub_key = key.prev_tx_hash.substr(space_idx);
+
+    std::cout << "Signature: \"" << signature << "\"" << std::endl;
+    std::cout << "Public Key: \"" << pub_key << "\"" << std::endl;
+
+    return true;
+}
+
+void remove_utxo(utxo_set& pool, utxo_key key) {
+    if (utxo_exists_in_pool(pool, key)) {
+        std::cout << "Removing UTXO: \n\t";
+        print_utxo_key(key);
+        pool.erase(key);
+    }
+}
+
+void add_utxo(utxo_set& pool, utxo_key key, utxo_val val) {
+    std::cout << "Adding UTXO to pool: \n\t\"" << key.prev_tx_hash << "\" ["
+              << key.output_idx << "] => " << val.amt << std::endl
+              << "\tPubKey Hash: " << val.tx_pub_hash << std::endl;
+    pool[key] = val;
+}
+
+utxo_key utxo_key_from_input(tx_in in) {
+    return utxo_key{in.tx_hash, in.output_idx};
 }
