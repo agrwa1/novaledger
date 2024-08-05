@@ -1,10 +1,12 @@
 #ifndef CORE_BLOCKCHAIN_H
 #define CORE_BLOCKCHAIN_H
 
-#include <vector>
+#include "types/all.h"
 
-#include "core/all.h"
+block mine_new_block(blockchain& chain);
 
-typedef std::vector<block> blockchain;
+void add_tx_to_blkchn_pool(blockchain& chain, tx_vec txs);
+
+void add_tx_to_blkchn_pool(blockchain& chain, tx t);
 
 #endif

@@ -4,8 +4,10 @@
 #include <string>
 #include <vector>
 
-// std::vector<uint8_t> transaction_signature(std::vector<uint8_t> hash, std::string priv_key);
-// change to sign_tx
+#include "types/all.h"
+
 std::vector<uint8_t> sign_tx(std::vector<uint8_t> hash, std::string priv_key);
+
+std::string hash_tx(tx t);
 
 #endif

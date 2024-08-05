@@ -1,17 +1,7 @@
 #include "crypto.h"
 
-#include <openssl/ec.h>
-#include <openssl/err.h>
-#include <openssl/evp.h>
-#include <openssl/pem.h>
-#include <openssl/ripemd.h>
 #include <openssl/sha.h>
 
-#include <iomanip>
-#include <iostream>
-#include <sstream>
-#include <stdexcept>
-#include <string>
 #include <vector>
 
 #include "util/all.h"

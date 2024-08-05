@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "core/all.h"
+#include "types/all.h"
 
 std::string bytes_to_hex(const std::vector<uint8_t>& bytes) {
     std::stringstream ss;
@@ -102,6 +102,12 @@ void serialize(std::vector<uint8_t>& buffer, const tx_out& output) {
     serialize(buffer, output.pub_hash);
 }
 
+void serialize(std::vector<uint8_t>& buffer, time_t value) {
+    for (size_t i = 0; i < sizeof(time_t); ++i) {
+        buffer.push_back((value >> (i * 8)) & 0xFF);
+    }
+}
+
 // NOTE - PURPOSEFULLY NOT SERIALIZING INPUTS OR OUTPUTS FIELDS; PLAN TO REMOVE THEM
 std::vector<uint8_t> serialize(const tx& tx) {
     std::vector<uint8_t> buffer;
@@ -120,6 +126,35 @@ std::vector<uint8_t> serialize(const tx& tx) {
     for (const auto& output : tx.outputs) {
         serialize(buffer, output);
     }
+
+    return buffer;
+}
+
+/*
+    FIELDS:
+        - CONSTANT: timestamp, version, difficulty
+        - PROVIDED: height, prev_hash, txs
+        - CALCULATED: merkle_root, nonce
+*/
+// TODO: make sure structure is valid
+std::vector<uint8_t> serialize(block& b) {
+    std::vector<uint8_t> buffer;
+
+    serialize(buffer, b.timestamp);
+    serialize(buffer, b.version);
+    serialize(buffer, b.difficulty);
+
+    serialize(buffer, b.height);
+    serialize(buffer, b.prev_hash);
+    for (auto t : b.txs) {
+        std::vector<uint8_t> bytes = serialize(t);
+        for (auto by : bytes) {
+            buffer.push_back(by);
+        }
+    }
+
+    serialize(buffer, b.merkle_root);
+    serialize(buffer, b.nonce);
 
     return buffer;
 }
