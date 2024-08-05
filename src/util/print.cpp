@@ -35,10 +35,11 @@ void print_wallet(wallet w) {
 void print_block(block b) {
     std::cout << "Version: " << b.version << std::endl;
     std::cout << b.height << ": \"" << b.prev_hash << "\"" << std::endl;
-    std::cout << "Root Hash: " << b.merkle_root << std::endl;
+    std::cout << "Merkle Root Hash: " << b.merkle_root << std::endl;
     std::cout << "Transactions: " << b.txs.size() << std::endl;
     std::cout << "Difficulty: " << b.difficulty << " -> Nonce: " << b.nonce << std::endl;
     std::cout << "Block Hash: " << b.blk_hash << std::endl;
+    std::cout << "Prev Block Hash: " << b.prev_hash << std::endl;
 }
 
 void print_blockchain(const blockchain& b) {

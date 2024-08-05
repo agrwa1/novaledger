@@ -2,6 +2,7 @@
 #define CORE_ALL_H
 
 #include "blockchain.h"
+#include "pow.h"
 #include "utxo.h"
 
 #endif

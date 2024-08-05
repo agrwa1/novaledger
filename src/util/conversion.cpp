@@ -133,7 +133,7 @@ std::vector<uint8_t> serialize(const tx& tx) {
 /*
     FIELDS:
         - CONSTANT: timestamp, version, difficulty
-        - PROVIDED: height, prev_hash, txs
+        - PROVIDED: height, prev_hash
         - CALCULATED: merkle_root, nonce
 */
 // TODO: make sure structure is valid
@@ -146,12 +146,6 @@ std::vector<uint8_t> serialize(block& b) {
 
     serialize(buffer, b.height);
     serialize(buffer, b.prev_hash);
-    for (auto t : b.txs) {
-        std::vector<uint8_t> bytes = serialize(t);
-        for (auto by : bytes) {
-            buffer.push_back(by);
-        }
-    }
 
     serialize(buffer, b.merkle_root);
     serialize(buffer, b.nonce);

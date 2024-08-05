@@ -6,7 +6,7 @@
 #define CONSENSUS_MECHANISM "POW"
 
 // BLOCK
-#define DEFAULT_BLOCK_HASH_DIFFICULTY 1;  // uint32_t
+#define DEFAULT_BLOCK_HASH_DIFFICULTY 5;  // uint32_t: simple #0s before hash
 #define BLOCK_VERSION "1.0";
 
 // TRANSACTION

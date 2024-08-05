@@ -104,9 +104,9 @@ void remove_utxo(utxo_set& pool, utxo_key key) {
 }
 
 void add_utxo(utxo_set& pool, utxo_key key, utxo_val val) {
-    std::cout << "Adding UTXO to pool: \n\t\"" << key.prev_tx_hash << "\" ["
-              << key.output_idx << "] => " << val.amt << std::endl
-              << "\tPubKey Hash: " << val.tx_pub_hash << std::endl;
+    // std::cout << "Adding UTXO to pool: \n\t\"" << key.prev_tx_hash << "\" ["
+    //           << key.output_idx << "] => " << val.amt << std::endl
+    //           << "\tPubKey Hash: " << val.tx_pub_hash << std::endl;
     pool[key] = val;
 }
 

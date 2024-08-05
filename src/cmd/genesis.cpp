@@ -17,7 +17,7 @@ full_node genesis(uint32_t num_wallets, uint64_t amt) {
 
     blockchain chain = blockchain_gns(txs);
     add_txs_to_blkchn_pool(chain, txs);
-    print_blockchain(chain);
+    // print_blockchain(chain);
 
     full_node n;
     n.chain = chain;
@@ -62,8 +62,12 @@ blockchain blockchain_gns(tx_vec& txs) {
     std::string merkle_root_hash = construct_merkle_tree(txs);
     blk.merkle_root = merkle_root_hash;
 
-    blk.nonce = 0;
     blk.blk_hash = hash_block(blk);
+
+    // Proof of work comps
+    blk.nonce = 0;
+    uint64_t nonce = pow_mine_block(blk);
+    print_block(blk);
 
     // add block to chain
     chain.ledger.push_back(blk);
