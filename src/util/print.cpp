@@ -15,7 +15,7 @@ void print_tx(tx t) {
     std::cout << "Outputs: " << t.outputs.size() << std::endl;
     for (int i = 0; i < t.outputs.size(); i++) {
         tx_out out = t.outputs[i];
-        std::cout << "[" << i << "] Amount: " << out.amt << ". PubKey Hash: " << out.pub_hash << std::endl;
+        std::cout << "[" << i << "] Amount: " << out.amt << ". PubKey Hash: " << out.tx_pub_hash << std::endl;
     }
     std::cout << std::endl;
 }
@@ -42,8 +42,27 @@ void print_block(block b) {
 }
 
 void print_blockchain(const blockchain& b) {
+    std::cout << std::endl;
     for (auto blk : b.ledger) {
         print_block(blk);
         std::cout << std::endl;
+    }
+}
+
+void print_utxo_key(utxo_key key) {
+    std::cout << "Key: " << key.prev_tx_hash << "[" << key.output_idx << "]" << std::endl;
+}
+
+void print_utxo_val(utxo_val val) {
+    std::cout << "Amount: " << val.amt << std::endl;
+    std::cout << "Pub Key Hash: " << val.tx_pub_hash << std::endl;
+}
+
+void print_utxo_set(utxo_set& pool) {
+    // get all key val pairs
+    for (const auto& pair : pool) {
+        std::cout << std::endl;
+        print_utxo_key(pair.first);
+        print_utxo_val(pair.second);
     }
 }

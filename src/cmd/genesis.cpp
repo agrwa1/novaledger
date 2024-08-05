@@ -1,6 +1,7 @@
 
 #include "genesis.h"
 
+#include <iostream>
 #include <vector>
 
 #include "core/all.h"
@@ -15,14 +16,14 @@ full_node genesis(uint32_t num_wallets, uint64_t amt) {
     tx_vec txs = gen_gns_txs(wallets, amt);
 
     blockchain chain = blockchain_gns(txs);
-    add_tx_to_blkchn_pool(chain, txs);
+    add_txs_to_blkchn_pool(chain, txs);
     print_blockchain(chain);
 
     full_node n;
     n.chain = chain;
-    // implement utxo updates
-    // n.pool = {};
 
+    // update utxo set
+    update_utxo_set_from_block(n.pool, n.chain.ledger[0]);
     return n;
 }
 

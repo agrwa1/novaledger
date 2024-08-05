@@ -8,7 +8,7 @@
 
 struct tx_in {
     std::string tx_hash;
-    std::string sig;
+    std::string sig;  // = "signature" "pub key"
     uint32_t output_idx;
 
     // sequence number set for now, might implement rbf later
@@ -18,7 +18,7 @@ struct tx_in {
 // an output is a UTXO
 struct tx_out {
     uint64_t amt;
-    std::string pub_hash;
+    std::string tx_pub_hash;
 };
 
 // can add locktime later if want to add smart contracts

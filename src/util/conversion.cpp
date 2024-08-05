@@ -99,7 +99,7 @@ void serialize(std::vector<uint8_t>& buffer, const tx_out& output) {
     buffer.push_back((output.amt >> 48) & 0xFF);
     buffer.push_back((output.amt >> 56) & 0xFF);
 
-    serialize(buffer, output.pub_hash);
+    serialize(buffer, output.tx_pub_hash);
 }
 
 void serialize(std::vector<uint8_t>& buffer, time_t value) {
