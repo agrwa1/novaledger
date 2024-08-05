@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include "core/all.h"
-#include "util/all.h"
+#include "crypto/all.h"
+#include "types/all.h"
 
 // TODO: add block mine reward to node wallet address
 // TODO: Proof of work -> add nonce config
@@ -35,28 +35,15 @@ block mine_new_block(blockchain& chain) {
 }
 
 // add tx to pool
-// auto miner
-
-// init new blockchain (genesis)
-blockchain blockchain_gns(std::vector<tx>& txs) {
-    blockchain chain;
-    block blk;
-
-    blk.timestamp = time_t(nullptr);
-    blk.height = 0;
-    blk.prev_hash = "";
-    blk.txs = txs;
-
-    // calculate merkle tree
-    std::string merkle_root_hash = construct_merkle_tree(txs);
-    blk.merkle_root = merkle_root_hash;
-
-    blk.nonce = 0;
-    blk.blk_hash = hash_block(blk);
-
-    // add block to chain
-    chain.ledger.push_back(blk);
-    chain.tx_pool = {};
-
-    return chain;
+// only update utxo pool on block add -- sentinel program
+void add_tx_to_blkchn_pool(blockchain& chain, tx t) {
+    chain.tx_pool.push_back(t);
 }
+
+void add_tx_to_blkchn_pool(blockchain& chain, tx_vec txs) {
+    for (auto t : txs) {
+        chain.tx_pool.push_back(t);
+    }
+}
+
+// auto miner ??

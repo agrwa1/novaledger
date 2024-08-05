@@ -1,12 +1,9 @@
-#ifndef CORE_BLOCK_H
-#define CORE_BLOCK_H
+#ifndef TYPES_BLOCK_H
+#define TYPES_BLOCK_H
 
 #include <string>
-#include <vector>
 
-// #include "util/all.h"
 #include "constants.h"
-// #include "core/all.h"
 #include "transaction.h"
 
 // block needs: timestamp, previous hash, nonce, merkle root hash, transactions, difficulty
@@ -19,7 +16,7 @@ struct block {
     // PROVIDED
     uint64_t height;
     std::string prev_hash;
-    std::vector<tx> txs;
+    tx_vec txs;
 
     // CALCULATED
     std::string merkle_root;
@@ -27,11 +24,15 @@ struct block {
     std::string blk_hash;
 };
 
-std::string construct_merkle_tree(std::vector<tx>& txs);
+struct blockchain {
+    std::string version = BLOCKCHAIN_VERSION;
+    uint32_t difficulty = DEFAULT_BLOCK_HASH_DIFFICULTY;
+    std::string cons_mech = CONSENSUS_MECHANISM;
+    uint64_t block_mine_reward = 5'000'000'000ULL;
 
-std::string hash_block(block b);
+    std::vector<block> ledger;
+    tx_vec tx_pool;
+    uint32_t height = 0;
+};
 
-std::vector<std::string> generate_merkle_proof(std::vector<tx> txs, std::string target_tx_hash);
-
-bool merkle_proof_is_valid(std::vector<std::string> proof, std::string target_hash, uint32_t index);
 #endif

@@ -6,11 +6,7 @@
 #include <string>
 
 #include "crypto.h"
-
-struct crypto_keys {
-    std::string priv_key;
-    std::string pub_key;
-};
+#include "types/all.h"
 
 crypto_keys gen_keys();
 std::string get_priv_key(EC_KEY* ec_key);

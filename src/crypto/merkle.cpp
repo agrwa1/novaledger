@@ -1,21 +1,10 @@
-#include <algorithm>
-#include <cstddef>
-#include <cstdint>
-#include <ctime>
-#include <iostream>
+
 #include <string>
-#include <unordered_map>
 #include <vector>
 
-#include "core/all.h"
-#include "crypto/all.h"
-#include "util/all.h"
-
-std::string hash_block(block b) {
-    std::vector<uint8_t> serialized_block = serialize(b);
-    std::string blk_hash = bytes_to_hex(hash_sha256(hash_sha256(serialized_block)));
-    return blk_hash;
-}
+#include "crypto.h"
+#include "transaction.h"
+#include "types/all.h"
 
 // security: merkle trees prove that they actually did include a transaction
 // security: provides verification that no data was corrupted or lost
@@ -23,7 +12,7 @@ std::string hash_block(block b) {
 // efficiency: soft nodes rely on full nodes to provide verifications
 // privacy: don't have to send all transactions over network
 
-std::string construct_merkle_tree(std::vector<tx>& txs) {
+std::string construct_merkle_tree(tx_vec& txs) {
     std::vector<std::string> leaf_nodes;
     for (auto t : txs) {
         leaf_nodes.push_back(hash_tx(t));
@@ -47,7 +36,7 @@ std::string construct_merkle_tree(std::vector<tx>& txs) {
     return leaf_nodes[0];
 }
 
-std::vector<std::string> generate_merkle_proof(std::vector<tx> txs, std::string target_tx_hash) {
+std::vector<std::string> generate_merkle_proof(tx_vec txs, std::string target_tx_hash) {
     int32_t target_idx = -1;
     std::vector<std::string> leaf_nodes;
 

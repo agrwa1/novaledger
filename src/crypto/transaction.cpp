@@ -1,7 +1,10 @@
 #include <vector>
 
+#include "crypto.h"
 #include "openssl/ec.h"
 #include "openssl/pem.h"
+#include "types/all.h"
+#include "util/all.h"
 
 std::vector<uint8_t> sign_tx(std::vector<uint8_t> hash, std::string priv_key) {
     // Convert hex private key to binary
@@ -37,4 +40,12 @@ std::vector<uint8_t> sign_tx(std::vector<uint8_t> hash, std::string priv_key) {
     BN_free(priv_bn);
 
     return der_sig;
+}
+
+std::string hash_tx(tx t) {
+    // NOTE: PURPOSEFULLY NOT SERIALZING S_ADDR OR R_ADDR BC PLAN ON LATER REMOVING FIELDS
+    // serialize transaction -> double hash results
+    std::vector<uint8_t> serialized_tx = serialize(t);
+    std::string hashed_tx = bytes_to_hex(hash_sha256(hash_sha256(serialized_tx)));
+    return hashed_tx;
 }

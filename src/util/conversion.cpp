@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "core/all.h"
+#include "types/all.h"
 
 std::string bytes_to_hex(const std::vector<uint8_t>& bytes) {
     std::stringstream ss;

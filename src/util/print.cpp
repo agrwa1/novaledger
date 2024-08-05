@@ -1,7 +1,7 @@
 
 #include <iostream>
 
-#include "wallet/all.h"
+#include "types/all.h"
 
 void print_tx(tx t) {
     std::cout << "From: \"" << t.s_addr << "\"" << std::endl;

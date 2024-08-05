@@ -5,8 +5,8 @@
 #include <string>
 #include <vector>
 
-#include "core/all.h"
 #include "crypto/all.h"
+#include "types/all.h"
 #include "util/all.h"
 
 // s_addr is coinbase/magicmoneycenter
@@ -23,7 +23,7 @@ tx gen_gns_tx(wallet& w, std::string r_addr, std::string r_pub_key, uint64_t amt
     tx_out output{amt, pub_hash};
     std::vector<tx_out> outputs{output};
 
-    tx gns_tx = init_tx(s_addr, r_addr, 0, 1, inputs, outputs);
+    tx gns_tx = tx{s_addr, r_addr, 0, 1, inputs, outputs};
 
     // NOTE - Hardcoded holder fn until created syncing
     // TODO - move to wallet_sync when created

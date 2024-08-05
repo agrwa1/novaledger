@@ -3,15 +3,6 @@
 #include "crypto/all.h"
 #include "util/all.h"
 
-// crypto_keys keygen() {
-//     crypto_keys keys;
-//     EC_KEY* ec_key = generate_keys();
-//     keys.priv_key = get_priv_key(ec_key);
-//     keys.pub_key = get_pub_key(ec_key);
-
-//     return keys;
-// }
-
 // uses secp256k1
 // no error handling :)
 crypto_keys gen_keys() {

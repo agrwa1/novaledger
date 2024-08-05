@@ -1,45 +1,10 @@
-#ifndef WALLET_H
-#define WALLET_H
+#ifndef WALLET_MAIN_H
+#define WALLET_MAIN_H
 
 #include <list>
 #include <string>
 
-#include "core/all.h"
-
-// stores relevant utxo data
-// for wallet storage records, doesn't actually count for anything
-typedef struct w_utxo {
-    std::string tx_hash;
-    uint32_t output_idx;
-    uint64_t amt;
-
-    std::string sig;
-
-    // TODO: implement timestamps
-    // std::time_t tx_mined_at;
-} w_utxo;
-
-/* NOTE: UTXO POOL IMPLEMENTATION:
-    - list of all active utxos to use
-    - add new tokens to end
-    - remove tokens from beginning
-    - on soft refresh, check most recent
-        date from last token
-    - on hard refresh, rebuild entire list
-*/
-
-struct wallet {
-    std::string pub_key;
-    std::string priv_key;
-    std::string addr;
-
-    // timestamp (don't need to check previous transactions)
-    std::time_t last_refresh;
-    std::list<w_utxo> pool;
-
-    wallet(std::string pub, std::string priv, std::string addr)
-        : pub_key(pub), priv_key(priv), addr(addr) {}
-};
+#include "types/all.h"
 
 // FIXME: update create tx to use atomic updates
 // create transactions: wallet, r addr, amt
