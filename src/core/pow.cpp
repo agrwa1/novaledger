@@ -35,9 +35,12 @@ bool validate_block_pow(block& b) {
 
 // POW hash block and find nonce
 // TODO: optimize this
-void pow_mine_block(block& b) {
+std::string pow_mine_block(block& b) {
+    std::string blk_hash;
     for (; true;) {
         if (validate_block_pow(b)) break;
         b.nonce += 1;
     }
+
+    return blk_hash;
 }

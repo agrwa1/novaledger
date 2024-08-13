@@ -10,8 +10,5 @@ void print_blockchain(const blockchain& b);
 void print_utxo_key(utxo_key key);
 void print_utxo_val(utxo_val val);
 void print_utxo_set(utxo_set& pool);
-void print_bytes(std::vector<uint8_t> bytes);
-void print_serialized_net_msg(std::vector<uint8_t> msg);
-void print_net_msg(net_msg msg);
 
 #endif

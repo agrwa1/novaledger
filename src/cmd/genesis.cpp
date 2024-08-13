@@ -17,13 +17,13 @@ full_node genesis(uint32_t num_wallets, uint64_t amt) {
 
     blockchain chain = blockchain_gns(txs);
     add_txs_to_blkchn_pool(chain, txs);
+    // print_blockchain(chain);
 
     full_node n;
     n.chain = chain;
 
     // update utxo set
     update_utxo_set_from_block(n.pool, n.chain.ledger[0]);
-
     return n;
 }
 
@@ -66,8 +66,8 @@ blockchain blockchain_gns(tx_vec& txs) {
 
     // Proof of work comps
     blk.nonce = 0;
-    pow_mine_block(blk);
-    std::cout << "";
+    uint64_t nonce = pow_mine_block(blk);
+    print_block(blk);
 
     // add block to chain
     chain.ledger.push_back(blk);

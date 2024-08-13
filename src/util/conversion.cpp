@@ -152,24 +152,3 @@ std::vector<uint8_t> serialize(block& b) {
 
     return buffer;
 }
-
-std::vector<uint8_t> serialize(net_msg msg) {
-    std::vector<uint8_t> serialized;
-
-    serialized.push_back(msg.protocol_version);
-    serialized.push_back(static_cast<uint8_t>(msg.type));
-    uint32_t msg_len = msg.payload.size();
-    serialized.insert(serialized.end(), reinterpret_cast<uint8_t*>(&msg_len), reinterpret_cast<uint8_t*>(&msg_len) + sizeof(msg_len));
-    serialized.insert(serialized.end(), msg.payload.begin(), msg.payload.end());
-    return serialized;
-}
-
-net_msg deserialize_msg_header(std::vector<uint8_t> msg) {
-    net_msg m;
-
-    m.protocol_version = msg[0];
-    m.type = msg[1];
-    m.length = *reinterpret_cast<const uint8_t*>(&(msg[2]));
-
-    return m;
-}

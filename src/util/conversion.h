@@ -20,7 +20,4 @@ std::vector<uint8_t> uint64_to_bytes(uint64_t value);
 std::vector<uint8_t> serialize(const tx& tx);
 std::vector<uint8_t> serialize(block& b);
 
-std::vector<uint8_t> serialize(net_msg msg);
-net_msg deserialize_msg_header(std::vector<uint8_t> msg);
-
 #endif

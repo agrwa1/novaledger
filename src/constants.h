@@ -6,17 +6,10 @@
 #define CONSENSUS_MECHANISM "POW"
 
 // BLOCK
-#define DEFAULT_BLOCK_HASH_DIFFICULTY 1;  // uint32_t: simple #0s before hash
+#define DEFAULT_BLOCK_HASH_DIFFICULTY 5;  // uint32_t: simple #0s before hash
 #define BLOCK_VERSION "1.0";
 
 // TRANSACTION
 #define TRANSACTION_VERSION "1.0";
-
-// P2P
-#define TESTNET_LISTEN_PORT 14433;
-#define MAINNET_LISTEN_PORT 29986;
-
-// NETWORK
-#define NETWORK_PROTOCOL_VERSION "1.0";
 
 #endif
