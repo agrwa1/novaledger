@@ -5,10 +5,16 @@
 #include "utxo.h"
 
 struct full_node {
+    // CORE
     blockchain chain;
     utxo_set pool;
+
+    // WALLET
     std::vector<std::string> wallet_addrs;
     std::string primary_addr;
+
+    // NETWORK
+    std::string listen_addr;
 };
 
 #endif

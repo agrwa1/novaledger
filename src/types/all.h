@@ -3,6 +3,7 @@
 
 #include "block.h"
 #include "crypto.h"
+#include "net.h"
 #include "node.h"
 #include "transaction.h"
 #include "utxo.h"

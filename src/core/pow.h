@@ -12,7 +12,7 @@ std::string gen_target_hash(uint32_t difficulty);
 bool validate_block_pow(block& b);
 
 // POW hash block and find nonce
-uint64_t pow_mine_block(block& b);
+void pow_mine_block(block& b);
 
 // validate block
 
